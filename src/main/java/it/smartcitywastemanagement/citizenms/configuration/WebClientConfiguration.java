@@ -43,8 +43,7 @@ public class WebClientConfiguration {
                                 .flatMap(Mono::error);
                     }
                     return Mono.just(clientResponse);
-                }
-        );
+                });
 
         return webClientBuilder
                 .baseUrl(API_LOGIN_MS)

@@ -1,6 +1,7 @@
 package it.smartcitywastemanagement.citizenms.service;
 
 
+import ch.qos.logback.core.net.server.Client;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -23,9 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -52,6 +55,8 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
     @Autowired
     private WebClient createUserWebClient;
+
+    private static final Logger logger = LoggerFactory.getLogger(ManageCitizenServiceImpl.class);
     
 
 
@@ -61,9 +66,11 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
         // salvataggio citizen
         Citizen newCitizen = citizenRepository.save(citizen);
 
+
         // chiamata all'API di LOGINMS per creare lo user per l'accesso al sistema
         String userID_created = APICALL_createUser(newCitizen);
 
+        // chiamata all'API successfull
         // inserimento dello user ID appena creato
         newCitizen.setUser_id(userID_created);
 
@@ -128,6 +135,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
                 if (citizenExist)
                     continue;
 
+
                 // Altrimenti aggiungo all'array dei citizen da salvare nel db
                 batchCitizen.add(newCitizen);
             }
@@ -138,6 +146,12 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
         // Costruzione dell'array di IDs creati
         for (Citizen citizen : createdCitizens) {
+
+            // per ogni utente faccio la chiamata a loginMS
+            String userID_created = APICALL_createUser(citizen);
+            citizen.setUser_id(userID_created);
+            citizenRepository.save(citizen);
+
             citizenIDs.add(citizen.getId());
         }
 
@@ -148,21 +162,26 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
     private String APICALL_createUser(Citizen newCitizen) {
 
-        /*CitizenRegistrationDTO citizenRegistrationDTO = new CitizenRegistrationDTO();
+        CitizenRegistrationDTO citizenRegistrationDTO = new CitizenRegistrationDTO();
 
+        citizenRegistrationDTO.setCitizenId(newCitizen.getId());
         citizenRegistrationDTO.setEmail(newCitizen.getEmail());
 
-
         return createUserWebClient.post()
-                .uri("/citizen_registration/{citizenID}",newCitizen.getId())
+                .uri("/citizen_registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(citizenRegistrationDTO),CitizenRegistrationDTO.class)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();*/
-        return null;
+                .doOnError( error -> {updateDb(newCitizen);})
+                .block();
     }
 
+
+
+    private void updateDb(Citizen citizen) {
+        citizenRepository.delete(citizen);
+    }
 
 
 

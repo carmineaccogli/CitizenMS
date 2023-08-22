@@ -2,25 +2,17 @@ package it.smartcitywastemanagement.citizenms.dto;
 
 public class CitizenRegistrationDTO {
 
-    private String username;
-    private String password;
+
+    private String citizenId;
     private String email;
 
 
-    public String getUsername() {
-        return username;
+    public String getCitizenId() {
+        return citizenId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCitizenId(String citizenId) {
+        this.citizenId = citizenId;
     }
 
     public String getEmail() {
