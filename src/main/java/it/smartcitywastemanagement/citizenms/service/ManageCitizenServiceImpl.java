@@ -144,15 +144,28 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
         // Salvataggio in batch
         List<Citizen> createdCitizens = citizenRepository.saveAll(batchCitizen);
 
-        // Costruzione dell'array di IDs creati
+        /** Finalizzazione creazione cittadini
+         * Notare la gestione locale dell'eccezione e il non intervento dell'handler globale
+         * in modo da continuare con l'iterazione successiva (prossimo cittadino da salvare)
+         * in caso di errore
+         */
         for (Citizen citizen : createdCitizens) {
 
-            // per ogni utente faccio la chiamata a loginMS
-            String userID_created = APICALL_createUser(citizen);
+            String userID_created;
+
+            // per ogni utente provo a fare la chiamata a loginMS
+            try {
+                userID_created = APICALL_createUser(citizen);
+            } catch(WebClientResponseException e) {
+                // si continua con il cittadino successivo da salvare
+                continue;
+            }
+
+            // In caso di chiamata API correttamente eseguita
             citizen.setUser_id(userID_created);
             citizenRepository.save(citizen);
-
             citizenIDs.add(citizen.getId());
+
         }
 
         return citizenIDs;
