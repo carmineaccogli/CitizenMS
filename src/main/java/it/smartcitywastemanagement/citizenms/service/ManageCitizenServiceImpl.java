@@ -181,7 +181,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
         citizenRegistrationDTO.setEmail(newCitizen.getEmail());
 
         return createUserWebClient.post()
-                .uri("/citizen_registration")
+                .uri(uriBuilder -> uriBuilder.path("/citizen_registration").build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(citizenRegistrationDTO),CitizenRegistrationDTO.class)
                 .retrieve()
