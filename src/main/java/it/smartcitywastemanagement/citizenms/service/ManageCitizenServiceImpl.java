@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +67,6 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
         // salvataggio citizen
         Citizen newCitizen = citizenRepository.save(citizen);
-
 
         // chiamata all'API di LOGINMS per creare lo user per l'accesso al sistema
         String userID_created = APICALL_createUser(newCitizen);
@@ -179,6 +180,8 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
         citizenRegistrationDTO.setCitizenId(newCitizen.getId());
         citizenRegistrationDTO.setEmail(newCitizen.getEmail());
+
+
 
         return createUserWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/citizen_registration").build())
