@@ -15,6 +15,7 @@ import it.smartcitywastemanagement.citizenms.dto.CitizenRegistrationDTO;
 import it.smartcitywastemanagement.citizenms.exceptions.CitizenNotFoundException;
 import it.smartcitywastemanagement.citizenms.mappers.CitizenMapper;
 import it.smartcitywastemanagement.citizenms.repositories.CitizenRepository;
+import it.smartcitywastemanagement.citizenms.security.JwtUtilities;
 import it.smartcitywastemanagement.citizenms.utility.CSVProcessingUtility;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -57,6 +58,9 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
     @Autowired
     private WebClient createUserWebClient;
+
+    @Autowired
+    private JwtUtilities jwtUtilities;
 
     private static final Logger logger = LoggerFactory.getLogger(ManageCitizenServiceImpl.class);
     
@@ -181,10 +185,13 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
         citizenRegistrationDTO.setCitizenId(newCitizen.getId());
         citizenRegistrationDTO.setEmail(newCitizen.getEmail());
 
+        final String jwtToken = jwtUtilities.generateToken();
+
 
 
         return createUserWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/citizen_registration").build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(citizenRegistrationDTO),CitizenRegistrationDTO.class)
                 .retrieve()
