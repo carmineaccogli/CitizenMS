@@ -17,4 +17,5 @@ public interface ManageCitizenService {
     Citizen findCitizenById(String citizenID) throws CitizenNotFoundException;
 
     List<String> loadCitizensFromFile(MultipartFile file) throws CsvException, IOException;
+    String findCitizenIdByUserId(String userID) throws CitizenNotFoundException;
 }

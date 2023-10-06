@@ -101,6 +101,14 @@ public class CitizenRestController {
         return result;
     }
 
+    @RequestMapping(value="/user/{userID}", method=RequestMethod.GET)
+    public ResponseEntity<String> getCitizenIdByUserId(@PathVariable String userID) throws CitizenNotFoundException{
+
+        String citizenID = manageCitizenService.findCitizenIdByUserId(userID);
+
+        return ResponseEntity.ok(citizenID);
+    }
+
 
     private List<CitizenDTO> fromCitizenToDTOArray(List<Citizen> entityCitizen) {
         List<CitizenDTO> result = new ArrayList<>();

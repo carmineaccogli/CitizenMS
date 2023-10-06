@@ -77,7 +77,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
         // chiamata all'API successfull
         // inserimento dello user ID appena creato
-        newCitizen.setUser_id(userID_created);
+        newCitizen.setUserId(userID_created);
 
         // update del cittadino
         citizenRepository.save(newCitizen);
@@ -89,6 +89,15 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
     public List<Citizen> findAllCitizens() {
         return citizenRepository.findAll();
+    }
+
+    public String findCitizenIdByUserId(String userID) throws CitizenNotFoundException {
+
+        Optional<Citizen> optCitizen = citizenRepository.findByUserId(userID);
+        if(!optCitizen.isPresent())
+            throw new CitizenNotFoundException();
+
+        return optCitizen.get().getId();
     }
 
     public Citizen findCitizenById(String citizenID) throws CitizenNotFoundException {
@@ -167,7 +176,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
             }
 
             // In caso di chiamata API correttamente eseguita
-            citizen.setUser_id(userID_created);
+            citizen.setUserId(userID_created);
             citizenRepository.save(citizen);
             citizenIDs.add(citizen.getId());
 
