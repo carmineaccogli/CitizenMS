@@ -102,11 +102,14 @@ public class CitizenRestController {
     }
 
     @RequestMapping(value="/user/{userID}", method=RequestMethod.GET)
-    public ResponseEntity<String> getCitizenIdByUserId(@PathVariable String userID) throws CitizenNotFoundException{
+    public ResponseEntity<ResponseDTO> getCitizenIdByUserId(@PathVariable String userID) throws CitizenNotFoundException{
 
         String citizenID = manageCitizenService.findCitizenIdByUserId(userID);
 
-        return ResponseEntity.ok(citizenID);
+        return new ResponseEntity<>(
+                new ResponseDTO("success",citizenID),
+                HttpStatus.OK
+        );
     }
 
 
