@@ -112,6 +112,14 @@ public class CitizenRestController {
         );
     }
 
+    @RequestMapping(value="/ids", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getCitizenBaseInfo() {
+
+        List<String> citizenIDs = manageCitizenService.getAllCitizensID();
+
+        return ResponseEntity.ok(citizenIDs);
+    }
+
 
     private List<CitizenDTO> fromCitizenToDTOArray(List<Citizen> entityCitizen) {
         List<CitizenDTO> result = new ArrayList<>();

@@ -16,4 +16,5 @@ public interface CitizenRepository extends MongoRepository<Citizen, String> {
     boolean existsCitizenBySsn(String ssn);
 
     Optional<Citizen> findByUserId(String userId);
+
 }

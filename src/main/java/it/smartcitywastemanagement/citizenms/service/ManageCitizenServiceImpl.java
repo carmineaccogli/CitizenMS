@@ -185,6 +185,17 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
         return citizenIDs;
     }
 
+    public List<String> getAllCitizensID() {
+
+        List<String> allIDs = new ArrayList<>();
+        List<Citizen> allCitizens = citizenRepository.findAll();
+
+        for(Citizen citizen: allCitizens)
+            allIDs.add(citizen.getId());
+
+        return allIDs;
+    }
+
 
 
     private String APICALL_createUser(Citizen newCitizen) {
