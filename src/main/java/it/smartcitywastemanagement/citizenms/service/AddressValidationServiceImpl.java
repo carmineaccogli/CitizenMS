@@ -22,19 +22,24 @@ public class AddressValidationServiceImpl implements AddressValidationService{
 
     public Mono<Boolean> checkAddress(Address addressToCheck) {
 
-        String query = addressToCheck.getStreetNumber() + " " + addressToCheck.getStreetName() + ","
+        /*String query = addressToCheck.getStreetNumber() + " " + addressToCheck.getStreetName() + ","
                         + addressToCheck.getCity() + ","
-                        + addressToCheck.getPostalCode();
+                        + addressToCheck.getPostalCode();*/
 
 
         return addressValidatorWebClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/search")
-                        .queryParam("q",query)
+                        //.queryParam("q",query)
+                        .queryParam("city",addressToCheck.getCity())
+                        .queryParam("postalcode",addressToCheck.getPostalCode())
+                        .queryParam("street",addressToCheck.getStreetName())
                         .queryParam("format", "json")
                         .build())
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToFlux(Object.class)
+                .collectList()
                 .map(responseBody -> !responseBody.isEmpty());
+                //.map(responseBody -> responseBody.isEmpty());
     }
 
 
