@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -92,6 +93,19 @@ public class CustomExceptionHandler  {
                 .body(new ExceptionDTO(
                         18,
                         WebClientResponseException.class.getSimpleName(),
+                        responseBody
+                ));
+    }
+
+    @ExceptionHandler(WebClientRequestException.class)
+    public ResponseEntity<Object> handleSpecificException(WebClientRequestException ex) {
+        // Creare un oggetto di risposta personalizzato per l'eccezione specifica
+        String responseBody = ex.getMessage();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ExceptionDTO(
+                        19,
+                        WebClientRequestException.class.getSimpleName(),
                         responseBody
                 ));
     }

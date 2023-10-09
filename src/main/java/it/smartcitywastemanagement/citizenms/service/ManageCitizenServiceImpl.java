@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
@@ -67,7 +68,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
 
 
-    public String addNewCitizen(Citizen citizen) throws DuplicateKeyException, WebClientResponseException {
+    public String addNewCitizen(Citizen citizen) throws DuplicateKeyException, WebClientResponseException, WebClientRequestException {
 
         // salvataggio citizen
         Citizen newCitizen = citizenRepository.save(citizen);
@@ -198,7 +199,7 @@ public class ManageCitizenServiceImpl implements ManageCitizenService {
 
 
 
-    private String APICALL_createUser(Citizen newCitizen) {
+    private String APICALL_createUser(Citizen newCitizen) throws WebClientRequestException {
 
         CitizenRegistrationDTO citizenRegistrationDTO = new CitizenRegistrationDTO();
 
