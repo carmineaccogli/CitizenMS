@@ -15,6 +15,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class CitizenRestController {
     API PER AGGIUNTA CITTADINI
      -----*/
 
+    @PreAuthorize("hasAnyRole('ROLE_MunicipalOffice','ROLE_Admin')")
     @RequestMapping(value="/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> addCitizen(@Valid  @RequestBody CitizenDTO citizenDTO) throws DuplicateKeyException, WebClientResponseException {
 
@@ -54,6 +56,7 @@ public class CitizenRestController {
                 HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MunicipalOffice','ROLE_Admin')")
     @RequestMapping(value="/add/upload", method=RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDTO> addCitizensUsingFile(@RequestParam("file")MultipartFile file) throws CsvException, IOException, FileNotValidException {
 
@@ -77,6 +80,7 @@ public class CitizenRestController {
     API PER RICERCA CITTADINI
      -----*/
 
+    @PreAuthorize("hasAnyRole('ROLE_MunicipalOffice','ROLE_Admin')")
     @RequestMapping(value="/", method = RequestMethod.GET)
     public ResponseEntity<List<CitizenDTO>> getAllCitizens() {
 
@@ -92,6 +96,7 @@ public class CitizenRestController {
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MunicipalOffice','ROLE_Admin','ROLE_Citizen')")
     @RequestMapping(value="/{citizenID}", method = RequestMethod.GET)
     public CitizenDTO getCitizenById(@PathVariable String citizenID) throws CitizenNotFoundException {
 
@@ -102,6 +107,7 @@ public class CitizenRestController {
         return result;
     }
 
+    @PreAuthorize("hasRole('ROLE_Citizen')")
     @RequestMapping(value="/user/{userID}", method=RequestMethod.GET)
     public ResponseEntity<ResponseDTO> getCitizenIdByUserId(@PathVariable String userID) throws CitizenNotFoundException{
 
@@ -113,6 +119,7 @@ public class CitizenRestController {
         );
     }
 
+    @PreAuthorize("hasRole('ROLE_MICROSERVICE-COMMUNICATION')")
     @RequestMapping(value="/ids", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getCitizenBaseInfo() {
 
