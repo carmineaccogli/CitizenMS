@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
@@ -109,6 +110,14 @@ public class CustomExceptionHandler  {
                         responseBody
                 ));
     }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Object> noHandlerFoundHandler(NoHandlerFoundException ex) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getBody());
+    }
+
 
 
 
