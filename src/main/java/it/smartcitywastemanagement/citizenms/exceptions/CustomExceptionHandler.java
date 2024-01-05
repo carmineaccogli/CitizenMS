@@ -41,7 +41,7 @@ public class CustomExceptionHandler  {
                 .body(new ExceptionDTO(
                         7,
                         CitizenNotFoundException.class.getSimpleName(),
-                        "Cittadino non trovato"
+                        "Citizen not found"
                 ));
     }
 
@@ -52,7 +52,7 @@ public class CustomExceptionHandler  {
                 .body(new ExceptionDTO(
                         21,
                         FileNotValidException.class.getSimpleName(),
-                        "File vuoto o in formato CSV non valido "
+                        "File not valid or in invalid CSV format"
                 ));
     }
 
@@ -63,7 +63,7 @@ public class CustomExceptionHandler  {
                 .body(new ExceptionDTO(
                         22,
                         DuplicateKeyException.class.getSimpleName(),
-                        "Esiste già un cittadino con lo stesso Codice Fiscale"
+                        "A citizen with the same SSN already exists"
                 ));
     }
 
