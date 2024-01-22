@@ -1,5 +1,8 @@
 package it.smartcitywastemanagement.citizenms.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Address {
 
     private String streetName;
@@ -43,7 +46,12 @@ public class Address {
         this.streetNumber = streetNumber;
     }
 
-    public Address(String streetName, String streetNumber, String city, String postalCode) {
+
+    @JsonCreator
+    public Address(@JsonProperty("streetName") String streetName,
+                   @JsonProperty("streetNumber") String streetNumber,
+                   @JsonProperty("city") String city,
+                   @JsonProperty("postalCode") String postalCode) {
         this.streetName = streetName;
         this.streetNumber = streetNumber;
         this.city = city;
