@@ -11,7 +11,7 @@ public class WebClientConfiguration {
 
     private final String API_VALIDATING_ADDRESS = "https://nominatim.openstreetmap.org";
 
-    private final String API_LOGIN_MS = "http://loginService:8080/api/authentication";
+    private final String API_LOGIN_MS = "http://authentication.scwmapp.int:8080/api/authentication";
 
     @Bean
     public WebClient addressValidatorWebClient(WebClient.Builder webClientBuilder) {
