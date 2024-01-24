@@ -30,7 +30,7 @@ jobs:
     - name: Archive Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: AlarmsMSBootjar
+        name: CitizenMSBootjar
         path: build/libs/CitizenMS-0.0.1-SNAPSHOT.jar
   
         
